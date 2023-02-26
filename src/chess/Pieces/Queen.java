@@ -33,8 +33,15 @@ public class Queen extends Piece {
                 removeList.add(movingToTile);
             }
         }
+
+        for (Tile tileA : movableTileList) {
+            for (Tile tileB : takenList) {
+                if ((tileA.getX() == tileB.getX()) && (tileA.getY() == tileB.getY())) {
+                    removeList.add(tileA);
+                }
+            }
+        }
         movableTileList.removeAll(removeList);
-        movableTileList.removeAll(takenList);
         return movableTileList;
     }
 }

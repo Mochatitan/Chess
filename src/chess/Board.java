@@ -170,7 +170,6 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        System.out.println(takenTileList);
     }
 
     @Override

@@ -16,6 +16,7 @@ public class Bishop extends Piece {
     public ArrayList<Tile> movableTiles(ArrayList<Tile> takenList) {
         // TODO Auto-generated method stub
         ArrayList<Tile> movableTileList = new ArrayList<Tile>();
+        ArrayList<Tile> removeList = new ArrayList<Tile>();
         int a = 1;
         int b = 1;
         int c = 1;
@@ -56,7 +57,16 @@ public class Bishop extends Piece {
             }
             d++;
         }
-        movableTileList.removeAll(takenList);
+
+        for (Tile tileA : movableTileList) {
+            for (Tile tileB : takenList) {
+                if ((tileA.getX() == tileB.getX()) && (tileA.getY() == tileB.getY())) {
+                    removeList.add(tileA);
+                }
+            }
+        }
+
+        movableTileList.removeAll(removeList);
         return movableTileList;
     }
 
