@@ -25,7 +25,7 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
     private Timer timer;
     // objects that appear on the game board
     private ArrayList<Piece> pieceList;
-
+    private ArrayList<Tile> takenTileList;
     private int TileX;
     private int TileY;
 
@@ -47,7 +47,8 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
 
         // initialize the game state
         pieceList = initializePieces();
-
+        takenTileList = new ArrayList<Tile>();
+        updateTakenTiles();
         // this timer will call the actionPerformed() method every DELAY ms
         timer = new Timer(DELAY, this);
         timer.start();
@@ -90,7 +91,7 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
             piece.draw(g, this);
         }
         if (pieceSelected == true) {
-            selectedPiece.drawMovableTiles(g);
+            selectedPiece.drawMovableTiles(g, takenTileList);
         }
         // player.draw(g, this);
 
@@ -157,14 +158,19 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
 
             }
         }
-
-        for (Tile tile : selectedPiece.movableTiles(selectedPiece.getTile()))
-            ;
-
+        if (pieceSelected == true) {
+            for (Tile tile : selectedPiece.movableTiles(takenTileList)) {
+                if ((tile.getX() == mouseTileX) && (tile.getY() == mouseTileY)) {
+                    move(selectedPiece, tile);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        System.out.println(takenTileList);
     }
 
     @Override
@@ -229,4 +235,18 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
         return initialPieces;
     }
 
+    private void updateTakenTiles() {
+
+        takenTileList.clear();
+
+        for (Piece piece : pieceList) {
+            takenTileList.add(piece.getTile());
+        }
+    }
+
+    private void move(Piece pieceMoved, Tile tileMovedTo) {
+        pieceMoved.move(tileMovedTo);
+        updateTakenTiles();
+        repaint();
+    }
 }

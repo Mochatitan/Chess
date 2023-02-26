@@ -38,8 +38,8 @@ public abstract class Piece {
 
     }
 
-    public void drawMovableTiles(Graphics g) {
-        for (Tile tile : movableTiles(this.tile)) {
+    public void drawMovableTiles(Graphics g, ArrayList<Tile> takenTiles) {
+        for (Tile tile : movableTiles(takenTiles)) {
             g.setColor(Color.GRAY);
             g.fillOval(
                     (tile.getDrawX() * Board.TILE_SIZE) + (Board.TILE_SIZE / 3),
@@ -98,5 +98,9 @@ public abstract class Piece {
         return "black";
     }
 
-    public abstract ArrayList<Tile> movableTiles(Tile tile);
+    public void move(Tile moveTile) {
+        this.tile = moveTile;
+    }
+
+    public abstract ArrayList<Tile> movableTiles(ArrayList<Tile> takenList);
 }

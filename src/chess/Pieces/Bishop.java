@@ -13,7 +13,7 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public ArrayList<Tile> movableTiles(Tile tile) {
+    public ArrayList<Tile> movableTiles(ArrayList<Tile> takenList) {
         // TODO Auto-generated method stub
         ArrayList<Tile> movableTileList = new ArrayList<Tile>();
         int a = 1;
@@ -26,37 +26,37 @@ public class Bishop extends Piece {
         boolean downRight = true;
         // up left of bishop
         while (upLeft == true) {
-            movableTileList.add(new Tile(tile.getX() - a, tile.getY() + a));
-            if ((tile.getX() - a == 1) || (tile.getY() + a == 8)) {
+            movableTileList.add(new Tile(this.tile.getX() - a, this.tile.getY() + a));
+            if ((this.tile.getX() - a == 1) || (this.tile.getY() + a == 8)) {
                 upLeft = false;
             }
             a++;
         }
         // up right of bishop
         while (upRight == true) {
-            movableTileList.add(new Tile(tile.getX() + b, tile.getY() + b));
-            if ((tile.getX() + b == 8) || (tile.getY() + b == 8)) {
+            movableTileList.add(new Tile(this.tile.getX() + b, this.tile.getY() + b));
+            if ((this.tile.getX() + b == 8) || (this.tile.getY() + b == 8)) {
                 upRight = false;
             }
             b++;
         }
         // // down left of bishop
         while (downLeft == true) {
-            movableTileList.add(new Tile(tile.getX() - c, tile.getY() - c));
-            if ((tile.getX() - c == 1) || (tile.getY() - c == 1)) {
+            movableTileList.add(new Tile(this.tile.getX() - c, this.tile.getY() - c));
+            if ((this.tile.getX() - c == 1) || (this.tile.getY() - c == 1)) {
                 downLeft = false;
             }
             c++;
         }
         // // down right of bishop
         while (downRight == true) {
-            movableTileList.add(new Tile(tile.getX() + d, tile.getY() - d));
-            if ((tile.getX() + d == 8) || (tile.getY() - d == 1)) {
+            movableTileList.add(new Tile(this.tile.getX() + d, this.tile.getY() - d));
+            if ((this.tile.getX() + d == 8) || (this.tile.getY() - d == 1)) {
                 downRight = false;
             }
             d++;
         }
-
+        movableTileList.removeAll(takenList);
         return movableTileList;
     }
 

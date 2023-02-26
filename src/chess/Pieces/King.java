@@ -12,7 +12,7 @@ public class King extends Piece {
     }
 
     @Override
-    public ArrayList<Tile> movableTiles(Tile tile) {
+    public ArrayList<Tile> movableTiles(ArrayList<Tile> takenList) {
         ArrayList<Tile> movableTileList = new ArrayList<Tile>();
         ArrayList<Tile> removeList = new ArrayList<Tile>();
         movableTileList.add(new Tile(tile.getX() - 1, tile.getY() + 1));
@@ -33,6 +33,7 @@ public class King extends Piece {
             }
         }
         movableTileList.removeAll(removeList);
+        movableTileList.removeAll(takenList);
         return movableTileList;
     }
 }

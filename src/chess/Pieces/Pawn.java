@@ -13,13 +13,14 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public ArrayList<Tile> movableTiles(Tile tile) {
+    public ArrayList<Tile> movableTiles(ArrayList<Tile> takenList) {
         // TODO Auto-generated method stub
         ArrayList<Tile> movableTileList = new ArrayList<Tile>();
         movableTileList.add(new Tile(tile.getX(), tile.getY() + 1));
         if (tile.getY() == 2) {
             movableTileList.add(new Tile(tile.getX(), 4));
         }
+        movableTileList.removeAll(takenList);
         return movableTileList;
     }
 

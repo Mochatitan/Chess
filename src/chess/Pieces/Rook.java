@@ -12,7 +12,7 @@ public class Rook extends Piece {
     }
 
     @Override
-    public ArrayList<Tile> movableTiles(Tile tile) {
+    public ArrayList<Tile> movableTiles(ArrayList<Tile> takenList) {
 
         ArrayList<Tile> movableTileList = new ArrayList<Tile>();
 
@@ -32,7 +32,7 @@ public class Rook extends Piece {
         for (var y = tile.getY() + 1; y < 9; y++) {
             movableTileList.add(new Tile(tile.getX(), y));
         }
-
+        movableTileList.removeAll(takenList);
         return movableTileList;
     }
 }

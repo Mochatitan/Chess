@@ -12,7 +12,7 @@ public class Knight extends Piece {
     }
 
     @Override
-    public ArrayList<Tile> movableTiles(Tile tile) {
+    public ArrayList<Tile> movableTiles(ArrayList<Tile> takenList) {
         // TODO Auto-generated method stub
         ArrayList<Tile> movableTileList = new ArrayList<Tile>();
         ArrayList<Tile> removeList = new ArrayList<Tile>();
@@ -34,6 +34,7 @@ public class Knight extends Piece {
             }
         }
         movableTileList.removeAll(removeList);
+        movableTileList.removeAll(takenList);
         return movableTileList;
     }
 }
