@@ -245,6 +245,9 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
 
     private void move(Piece pieceMoved, Tile tileMovedTo) {
         pieceMoved.move(tileMovedTo);
+        pieceSelected = false;
+        selectedPiece.deSelect();
+        selectedPiece = null;
         updateTakenTiles();
         repaint();
     }

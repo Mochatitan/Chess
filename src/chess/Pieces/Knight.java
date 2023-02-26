@@ -16,20 +16,22 @@ public class Knight extends Piece {
         // TODO Auto-generated method stub
         ArrayList<Tile> movableTileList = new ArrayList<Tile>();
         ArrayList<Tile> removeList = new ArrayList<Tile>();
-        movableTileList.add(new Tile(tile.getX() - 1, tile.getY() + 1));
-        movableTileList.add(new Tile(tile.getX(), tile.getY() + 1));
-        movableTileList.add(new Tile(tile.getX() + 1, tile.getY() + 1));
 
-        movableTileList.add(new Tile(tile.getX() - 1, tile.getY()));
-        movableTileList.add(new Tile(tile.getX() + 1, tile.getY()));
+        movableTileList.add(new Tile(tile.getX() + 1, tile.getY() + 2));
+        movableTileList.add(new Tile(tile.getX() + 1, tile.getY() - 2));
 
-        movableTileList.add(new Tile(tile.getX() - 1, tile.getY() - 1));
-        movableTileList.add(new Tile(tile.getX(), tile.getY() - 1));
-        movableTileList.add(new Tile(tile.getX() + 1, tile.getY() - 1));
+        movableTileList.add(new Tile(tile.getX() + 2, tile.getY() + 1));
+        movableTileList.add(new Tile(tile.getX() + 2, tile.getY() - 1));
+
+        movableTileList.add(new Tile(tile.getX() - 1, tile.getY() + 2));
+        movableTileList.add(new Tile(tile.getX() - 1, tile.getY() - 2));
+
+        movableTileList.add(new Tile(tile.getX() - 2, tile.getY() + 1));
+        movableTileList.add(new Tile(tile.getX() - 2, tile.getY() - 1));
 
         for (Tile movingToTile : movableTileList) {
-            if ((movingToTile.getX() == 0) || (movingToTile.getX() == 9) || (movingToTile.getY() == 0)
-                    || (movingToTile.getY() == 9)) {
+            if ((movingToTile.getX() <= 0) || (movingToTile.getX() >= 9) || (movingToTile.getY() <= 0)
+                    || (movingToTile.getY() >= 9)) {
                 removeList.add(movingToTile);
             }
         }
