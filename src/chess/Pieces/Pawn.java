@@ -17,9 +17,16 @@ public class Pawn extends Piece {
         // TODO Auto-generated method stub
         ArrayList<Tile> movableTileList = new ArrayList<Tile>();
         ArrayList<Tile> removeList = new ArrayList<Tile>();
-        movableTileList.add(new Tile(tile.getX(), tile.getY() + 1));
-        if (tile.getY() == 2) {
-            movableTileList.add(new Tile(tile.getX(), 4));
+        if (isWhite() == true) {
+            movableTileList.add(new Tile(tile.getX(), tile.getY() + 1));
+            if (tile.getY() == 2) {
+                movableTileList.add(new Tile(tile.getX(), 4));
+            }
+        } else {
+            movableTileList.add(new Tile(tile.getX(), tile.getY() - 1));
+            if (tile.getY() == 7) {
+                movableTileList.add(new Tile(tile.getX(), 5));
+            }
         }
 
         for (Tile tileA : movableTileList) {

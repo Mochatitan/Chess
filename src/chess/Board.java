@@ -25,7 +25,13 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
     private Timer timer;
     // objects that appear on the game board
     private ArrayList<Piece> pieceList;
-    private ArrayList<Tile> takenTileList;
+
+    private ArrayList<Piece> whitePieceList;
+    private ArrayList<Piece> blackPieceList;
+
+    private ArrayList<Tile> whiteTileList;
+    private ArrayList<Tile> blackTileList;
+
     private int TileX;
     private int TileY;
 
@@ -38,6 +44,7 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
     private Piece selectedPiece;
 
     public boolean pieceSelected;
+    public String turn;
 
     public Board() {
         // set the game board size
@@ -46,13 +53,14 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
         setBackground(new Color(232, 232, 232));
 
         // initialize the game state
-        pieceList = initializePieces();
-        takenTileList = new ArrayList<Tile>();
+
+        initializePieces();
+
         updateTakenTiles();
         // this timer will call the actionPerformed() method every DELAY ms
         timer = new Timer(DELAY, this);
         timer.start();
-
+        turn = "white";
         pieceSelected = false;
     }
 
@@ -91,7 +99,11 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
             piece.draw(g, this);
         }
         if (pieceSelected == true) {
-            selectedPiece.drawMovableTiles(g, takenTileList);
+            if (selectedPiece.isWhite() == true) {
+                selectedPiece.drawMovableTiles(g, whiteTileList);
+            } else {
+                selectedPiece.drawMovableTiles(g, blackTileList);
+            }
         }
         // player.draw(g, this);
 
@@ -128,44 +140,86 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
         mouseTileY = 8 - (Math.abs(e.getY() - 31) / 100);
         System.out.println(mouseTileX);
         System.out.println(mouseTileY);
-        for (Piece piece : pieceList) {
-            if (piece.isWhite() == true) {
+        if (turn == "white") {
+            for (Piece piece : pieceList) {
+                if (piece.isWhite() == true) {
 
-                if ((piece.getTile().getX() == mouseTileX) && piece.getTile().getY() == mouseTileY) {
-                    // runs if the mouse clicks on a piece
-                    if (pieceSelected == true) {
-                        // runs if a piece is already selected
-                        if (selectedPiece == piece) {
-                            // if a piece is already selected at that point, deselect it
-                            pieceSelected = false;
-                            piece.deSelect();
-                            selectedPiece = null;
+                    if ((piece.getTile().getX() == mouseTileX) && piece.getTile().getY() == mouseTileY) {
+                        // runs if the mouse clicks on a piece
+                        if (pieceSelected == true) {
+                            // runs if a piece is already selected
+                            if (selectedPiece == piece) {
+                                // if a piece is already selected at that point, deselect it
+                                pieceSelected = false;
+                                piece.deSelect();
+                                selectedPiece = null;
+                            }
+
+                        } else {
+                            // runs if a piece is not already selected
+                            selectedPiece = piece;
+                            piece.select();
+                            pieceSelected = true;
+
+                            selectedTileX = mouseTileX - 1;
+                            selectedTileY = 8 - mouseTileY;
+                            System.out.println(piece);
                         }
-
-                    } else {
-                        // runs if a piece is not already selected
-                        selectedPiece = piece;
-                        piece.select();
-                        pieceSelected = true;
-
-                        selectedTileX = mouseTileX - 1;
-                        selectedTileY = 8 - mouseTileY;
-                        System.out.println(piece);
+                        repaint();
+                        break;
                     }
-                    repaint();
-                    break;
-                }
 
+                }
             }
-        }
-        if (pieceSelected == true) {
-            for (Tile tile : selectedPiece.movableTiles(takenTileList)) {
-                if ((tile.getX() == mouseTileX) && (tile.getY() == mouseTileY)) {
-                    move(selectedPiece, tile);
-                    break;
+            if (pieceSelected == true) {
+                for (Tile tile : selectedPiece.movableTiles(whiteTileList)) {
+                    if ((tile.getX() == mouseTileX) && (tile.getY() == mouseTileY)) {
+                        move(selectedPiece, tile);
+                        break;
+                    }
+                }
+            }
+        } else if (turn == "black") {
+            for (Piece piece : pieceList) {
+                if (piece.isWhite() == false) {
+
+                    if ((piece.getTile().getX() == mouseTileX) && piece.getTile().getY() == mouseTileY) {
+                        // runs if the mouse clicks on a piece
+                        if (pieceSelected == true) {
+                            // runs if a piece is already selected
+                            if (selectedPiece == piece) {
+                                // if a piece is already selected at that point, deselect it
+                                pieceSelected = false;
+                                piece.deSelect();
+                                selectedPiece = null;
+                            }
+
+                        } else {
+                            // runs if a piece is not already selected
+                            selectedPiece = piece;
+                            piece.select();
+                            pieceSelected = true;
+
+                            selectedTileX = mouseTileX - 1;
+                            selectedTileY = 8 - mouseTileY;
+                            System.out.println(piece);
+                        }
+                        repaint();
+                        break;
+                    }
+
+                }
+            }
+            if (pieceSelected == true) {
+                for (Tile tile : selectedPiece.movableTiles(blackTileList)) {
+                    if ((tile.getX() == mouseTileX) && (tile.getY() == mouseTileY)) {
+                        move(selectedPiece, tile);
+                        break;
+                    }
                 }
             }
         }
+
     }
 
     @Override
@@ -204,42 +258,53 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
         g.fillRect(selectedTileX * TILE_SIZE, selectedTileY * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 
-    private ArrayList<Piece> initializePieces() {
-        ArrayList<Piece> initialPieces = new ArrayList<Piece>();
+    private void initializePieces() {
+        blackTileList = new ArrayList<Tile>();
+        whiteTileList = new ArrayList<Tile>();
+        blackPieceList = new ArrayList<Piece>();
+        whitePieceList = new ArrayList<Piece>();
+        pieceList = new ArrayList<Piece>();
+
         // pawns
         for (var x = 1; x <= 8; x++) {
-            initialPieces.add(new Pawn(true, new Tile(x, 2)));
-            initialPieces.add(new Pawn(false, new Tile(x, 7)));
+            whitePieceList.add(new Pawn(true, new Tile(x, 2)));
+            blackPieceList.add(new Pawn(false, new Tile(x, 7)));
         }
         // rooks
-        initialPieces.add(new Rook(true, new Tile(1, 1)));
-        initialPieces.add(new Rook(true, new Tile(8, 1)));
-        initialPieces.add(new Rook(false, new Tile(1, 8)));
-        initialPieces.add(new Rook(false, new Tile(8, 8)));
+        whitePieceList.add(new Rook(true, new Tile(1, 1)));
+        whitePieceList.add(new Rook(true, new Tile(8, 1)));
+        blackPieceList.add(new Rook(false, new Tile(1, 8)));
+        blackPieceList.add(new Rook(false, new Tile(8, 8)));
         // Knights
-        initialPieces.add(new Knight(true, new Tile(2, 1)));
-        initialPieces.add(new Knight(true, new Tile(7, 1)));
-        initialPieces.add(new Knight(false, new Tile(2, 8)));
-        initialPieces.add(new Knight(false, new Tile(7, 8)));
+        whitePieceList.add(new Knight(true, new Tile(2, 1)));
+        whitePieceList.add(new Knight(true, new Tile(7, 1)));
+        blackPieceList.add(new Knight(false, new Tile(2, 8)));
+        blackPieceList.add(new Knight(false, new Tile(7, 8)));
         // Bishops
-        initialPieces.add(new Bishop(true, new Tile(3, 1)));
-        initialPieces.add(new Bishop(true, new Tile(6, 1)));
-        initialPieces.add(new Bishop(false, new Tile(3, 8)));
-        initialPieces.add(new Bishop(false, new Tile(6, 8)));
+        whitePieceList.add(new Bishop(true, new Tile(3, 1)));
+        whitePieceList.add(new Bishop(true, new Tile(6, 1)));
+        blackPieceList.add(new Bishop(false, new Tile(3, 8)));
+        blackPieceList.add(new Bishop(false, new Tile(6, 8)));
         // King and Queens
-        initialPieces.add(new King(true, new Tile(5, 1)));
-        initialPieces.add(new Queen(true, new Tile(4, 1)));
-        initialPieces.add(new King(false, new Tile(5, 8)));
-        initialPieces.add(new Queen(false, new Tile(4, 8)));
-        return initialPieces;
+        whitePieceList.add(new King(true, new Tile(5, 1)));
+        whitePieceList.add(new Queen(true, new Tile(4, 1)));
+        blackPieceList.add(new King(false, new Tile(5, 8)));
+        blackPieceList.add(new Queen(false, new Tile(4, 8)));
+
+        pieceList.addAll(whitePieceList);
+        pieceList.addAll(blackPieceList);
+
     }
 
     private void updateTakenTiles() {
 
-        takenTileList.clear();
-
-        for (Piece piece : pieceList) {
-            takenTileList.add(piece.getTile());
+        whiteTileList.clear();
+        blackTileList.clear();
+        for (Piece piece : whitePieceList) {
+            whiteTileList.add(piece.getTile());
+        }
+        for (Piece piece : blackPieceList) {
+            blackTileList.add(piece.getTile());
         }
     }
 
@@ -250,5 +315,16 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
         selectedPiece = null;
         updateTakenTiles();
         repaint();
+        swapTurn();
+    }
+
+    private void swapTurn() {
+        if (turn == "white") {
+            turn = "black";
+        } else if (turn == "black") {
+            turn = "white";
+        } else {
+            System.out.println("error color not found");
+        }
     }
 }
