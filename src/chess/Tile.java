@@ -32,4 +32,11 @@ public class Tile {
     public int getDrawY() {
         return 8 - tileY;
     }
+
+    public boolean isEqualTo(Tile tileTwo){
+        if((this.getX() == tileTwo.getX()) && (this.getY() == tileTwo.getY())){
+            return true;
+        }
+        return false;
+    }
 }

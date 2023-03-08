@@ -16,16 +16,12 @@ public class Queen extends Piece {
         // TODO Auto-generated method stub
         ArrayList<Tile> movableTileList = new ArrayList<Tile>();
         ArrayList<Tile> removeList = new ArrayList<Tile>();
-        movableTileList.add(new Tile(tile.getX() - 1, tile.getY() + 1));
-        movableTileList.add(new Tile(tile.getX(), tile.getY() + 1));
-        movableTileList.add(new Tile(tile.getX() + 1, tile.getY() + 1));
-
-        movableTileList.add(new Tile(tile.getX() - 1, tile.getY()));
-        movableTileList.add(new Tile(tile.getX() + 1, tile.getY()));
-
-        movableTileList.add(new Tile(tile.getX() - 1, tile.getY() - 1));
-        movableTileList.add(new Tile(tile.getX(), tile.getY() - 1));
-        movableTileList.add(new Tile(tile.getX() + 1, tile.getY() - 1));
+        for(int col = 0; col < 9;col++){
+            for(int row = 0; row < 9;row++){
+                movableTileList.add(new Tile(row, col));
+            }
+        }
+        
 
         for (Tile movingToTile : movableTileList) {
             if ((movingToTile.getX() == 0) || (movingToTile.getX() == 9) || (movingToTile.getY() == 0)
@@ -41,6 +37,7 @@ public class Queen extends Piece {
                 }
             }
         }
+        removeList.add(this.getTile());
         movableTileList.removeAll(removeList);
         return movableTileList;
     }

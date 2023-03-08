@@ -13,9 +13,11 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
     // controls the delay between each tick in ms
     private final int DELAY = 25;
     // controls the size of the board
-    public static final int TILE_SIZE = 100;
+    public static final int TILE_SIZE = 80;
     public static final int ROWS = 8;
     public static final int COLUMNS = 8;
+    public static final int BOARD_X_OFFSET = 0;
+    public static final int BOARD_Y_OFFSET = 0;
     // controls how many apples appear on the board
     public static final int NUM_APPLES = 5;
     // suppress serialization warning
@@ -95,7 +97,10 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
         if (pieceSelected == true) {
             drawSelected(g);
         }
-        for (Piece piece : pieceList) {
+        for (Piece piece : whitePieceList) {
+            piece.draw(g, this);
+        }
+        for (Piece piece : blackPieceList) {
             piece.draw(g, this);
         }
         if (pieceSelected == true) {
@@ -136,13 +141,13 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
 
     @Override
     public void mousePressed(MouseEvent e) {
-        mouseTileX = (Math.abs(e.getX() - 9) / 100) + 1;
-        mouseTileY = 8 - (Math.abs(e.getY() - 31) / 100);
+        mouseTileX = (Math.abs(e.getX() - BOARD_X_OFFSET) / TILE_SIZE) + 1;
+        mouseTileY = 8 - (Math.abs(e.getY() - BOARD_Y_OFFSET ) / TILE_SIZE);
         System.out.println(mouseTileX);
         System.out.println(mouseTileY);
         if (turn == "white") {
-            for (Piece piece : pieceList) {
-                if (piece.isWhite() == true) {
+            for (Piece piece : whitePieceList) {
+                
 
                     if ((piece.getTile().getX() == mouseTileX) && piece.getTile().getY() == mouseTileY) {
                         // runs if the mouse clicks on a piece
@@ -163,13 +168,13 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
 
                             selectedTileX = mouseTileX - 1;
                             selectedTileY = 8 - mouseTileY;
-                            System.out.println(piece);
+                            
                         }
                         repaint();
                         break;
                     }
 
-                }
+                
             }
             if (pieceSelected == true) {
                 for (Tile tile : selectedPiece.movableTiles(whiteTileList)) {
@@ -180,8 +185,8 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
                 }
             }
         } else if (turn == "black") {
-            for (Piece piece : pieceList) {
-                if (piece.isWhite() == false) {
+            for (Piece piece : blackPieceList) {
+                
 
                     if ((piece.getTile().getX() == mouseTileX) && piece.getTile().getY() == mouseTileY) {
                         // runs if the mouse clicks on a piece
@@ -202,13 +207,13 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
 
                             selectedTileX = mouseTileX - 1;
                             selectedTileY = 8 - mouseTileY;
-                            System.out.println(piece);
+                           
                         }
                         repaint();
                         break;
                     }
 
-                }
+                
             }
             if (pieceSelected == true) {
                 for (Tile tile : selectedPiece.movableTiles(blackTileList)) {
@@ -306,6 +311,7 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
         for (Piece piece : blackPieceList) {
             blackTileList.add(piece.getTile());
         }
+        
     }
 
     private void move(Piece pieceMoved, Tile tileMovedTo) {
@@ -313,6 +319,27 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
         pieceSelected = false;
         selectedPiece.deSelect();
         selectedPiece = null;
+        ArrayList<Piece> killList = new ArrayList<Piece>();
+        if(turn == "white"){
+        for(Piece piece : blackPieceList){
+            if(piece.tile.isEqualTo(tileMovedTo)){
+                // System.out.println("white kill black");
+                piece.setKilled(true);
+                killList.add(piece);
+                //System.out.println(killList);
+            }
+        } blackPieceList.removeAll(killList);
+        } else if(turn == "black"){
+            for(Piece piece : whitePieceList){
+                if(piece.tile.isEqualTo(tileMovedTo)){
+                    // System.out.println("black kill white");
+                    piece.setKilled(true);
+                    killList.add(piece);
+                    // System.out.println(killList);
+                }
+            }whitePieceList.removeAll(killList);
+            }else{System.out.println("turn invalid. turn : "+turn);}
+            
         updateTakenTiles();
         repaint();
         swapTurn();
@@ -327,4 +354,6 @@ public class Board extends JPanel implements ActionListener, KeyListener, MouseL
             System.out.println("error color not found");
         }
     }
+
+    
 }
